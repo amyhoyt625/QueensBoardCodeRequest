@@ -1,0 +1,168 @@
+## Queen's Blood Adaption ##
+
+## Description
+This project is a compilation of methods and classes to create an edited version
+of the game Queen's Blood. The Game is defined by the creation of a gameboard, with given
+height and width parameters, and is played in turns with a RED player and BLUE. The RED
+player always starts.
+
+## Getting Started
+To start the game, create an instance of the model. In this example, we utilized a 3x5 gameboard:
+--> Board startingBoard = new Board(3, 5);
+This instantiates the board with a 2D array of Cells.
+Each cell is empty by default, but can store pawns (1, 2, 3) or a card.
+Creating a board also supplies each player with their own decks.
+They BOTH have the same cards, but the influence for the BLUE cards are flipped.
+The game should be started, and the RED player's turn is first.
+
+## Key Components
+The Model is made up of multiple parts:
+1. The Cell. The board is made up of multiple cells in order to store the various
+behaviors of a cell. Cells are able to be empty, store 1, 2, or 3 pawns, or a card. They
+also have an owner based on the pawns or card. We can also calculate an individual cell's
+score by calling the getCellScore method. The changeOwnership methods changes the ownership of
+a cell IF and only IF the cell contains pawns.
+2. A Card. A QueensCard has 5 values, including the name, cost, value, a 5x5 influence grid, and
+the player that owns the card. A card has the behavior to reflect the influence grid across
+the y-axis of the influence grid. This behavior is used when reading in the cards file.
+3. The Board. This class stores the overall behaviors of the game, including keeping track of the
+player's turn, the scores for each row for each player, the total scores for each player, and
+allowing for passing or playing a card.
+4**. INVARIANT: An invariant is defined as a logical truth that is upheld by the code. One such
+invariant is keeping the number of columns to be greater than one AND odd. This is upheld in our
+model through the constructor, disallowing a construction of a grid which does not follow this
+rule.
+
+## Source Organization:
+Aside from the model, there are three other important classes:
+1. The Main Class. The main class is used to run the program and create a proper instance of the
+game in order to properly test all functionality.
+2. The Textual View. The current state of the game should be able to be visible to the player
+when called upon. Although not graphic, the textual model correctly represents all elements of the
+game, including an empty cell, a cell with 1, 2, or 3 pawns, a cell with a card, and the
+row scores of both RED and BLUE players on the left and right most columns of each row, respectively.
+3. The Test class. The test class is used to test individual methods, both private and public to
+test the game each step at a time. This also ensures that the game created follows guidelines
+enforced in the Board constructor when starting the game.
+
+## Changes for Part 2
+1. Changed Deck Config to take in two file paths because previously only took in one path and
+flipped influence and influence grid after running through the file again, but now do so
+for the second file.
+2. Added functionality to main to take in the two file paths for deck. Made a read-only interface
+that is extended by our original board interface and also added a copy method that allows for the
+board to be copied at any point in time.
+3. Changed instances of <QueensCard> to <Card> since List should be of an Interface.
+
+
+## Classes introduced in Part 2:
+1. QueensBoardController: Controller that handles user input acts as an intermediate between the
+observer interface and view. Implemented using the Observer Pattern, where the controller is
+someObserver that subscribes to updates. The controller sends the user printed messages in the
+console to confirm when an action is performed.
+2. QueensBoardControllerInterface: An interface that stores the functionality of the Controller.
+The controller implements this interface to inherit functionality.
+3. ReadOnlyQueensBoard: An interface that is implemented by Board to create an instance of a Game
+Board. This interface prevents any internal modifications to the actual game model. As such, copies
+of hands and the current state of the board are utilized, rather than the original components.
+4. BestCardInfo: A class that stores information about the best possible card to be selected to make
+an informed move. It is used for the strategies implemented in BoardStrategy.
+5. Move: A class that creates an object to return a valid move of a player. A valid move can either
+be placing a card at a certain position or passing and shifting the turn to the other player. This
+object allows each strategy to return a valid move, rather than a singular component of the game.
+6. QueensMove: An interface that is implemented by Move to store functionality and define an outline
+for the class.
+7. BoardStrategy: A class that stores all possible strategies to utilize during a game. The
+following strategies are implemented in this class:
+    a) Strategy #1: Fill First
+       This strategy chooses the first card in a player's hand and places it in the first location
+       on the board that is valid for that player.
+       Selects the first card from the player's hand and places it in the first valid
+       position available, ensuring the cell's pawn count matches the card's cost
+       and the owner is correct.
+    b) Strategy #2: maxRowScore
+       This strategy chooses a specific card from a player's hand and places it in the first row
+       where the player has a row-score less than or equal to the opponent's row-score.
+       Maximizes the row score by selecting the best card from the player's hand and placing it
+       in a row where it can outscore the opponent.
+    c) Strategy #3: maxCellOwnership
+       This strategy chooses a specific card from a player's hand and a location on the board that
+       will give them ownership of the most cells, depending on the card's influence.
+       loops though to find best card and position matching card and cell's influence
+    d) Strategy #4: minimax
+       This strategy chooses the move that leaves their opponent in a situation with no good moves.
+       makes some guess as to what strategy that opponent is using
+       has helpers to attempt to calculate opponents strategies.
+While the strategies themselves are implemented in the Strategy Module, in the BoardStrategy class,
+their tests for functionality can be found in the test folder under the name "BoardStrategyTest".
+8. QueensBoardStrategy: An interface that is implemented by BoardStrategy to store functionality and
+define an outline for the class.
+9. BoardObserver: Following the Observer Pattern, this interface serves as the Observer, which,
+someObserver, the controller, implements. By doing so, the controller receives updates that a card
+or cell was selected, and tells the view to update the state.
+10. CardPanelBlue: A class that "paints" a singular Blue Player card as a graphical, physical
+object, with all card components, including name, cost, value, and influence grid being visible as
+elements of the card panel. This class extends the Java Swing class' JPanel to create a custom
+JPanel.
+11. CardPanelRed: This class is identical to CardPanelBlue, except it draw a singular Red Player
+card as a graphical, physical object.
+12. QueensBoardGUIViewClass: This class represents the graphical, physical view of a game board.
+This class is able to render the actual game board, the pawns that are present on the board, as well
+as any pawns added, any placedCards, the rowScores of each player, and each player's hand. When the
+game is started, this class creates two custom JFrames, one for the Red Player and one for the Blue
+Player. While the boards are identical, and are updated with each move, the Red Player frame
+displays only the Red Player's hand below the grid, and the Blue Player's hand in the Blue Player's
+frame. This class also takes care of highlighting selected cells, meaning it also takes care of any
+user interactions, including mouseclicks and key-presses. For the purposes of our model, the
+following key-presses perform actions:
+    a) SPACE BAR: Handles placing a card in a cell after selecting the card
+    b) "P": Handles the player making a "pass" move
+
+
+## jars
+Jars was made in out file and was ran properly through terminal using this:
+amyhoyt@MacBook-Pro ~ % java -jar "/Users/amyhoyt/Desktop/OOD/Homework 6/docs/Homework6.jar" "/Users/amyhoyt/Desktop/OOD/Homework 6/docs/RedDeck.config" "/Users/amyhoyt/Desktop/OOD/Homework 6/docs/BlueDeck.config"
+
+cs3500.queensboard.model.Board@2b552920
+RED's turn!
+Select a card index (0-4) or enter -1 to pass:
+
+pulled it out of out file for submission to the docs package be able to zip file
+
+## Changes for Part 3
+1. Changes getCell method in the QueensBoard so that it returns a copy of a Cell, based on what the
+original cell contained. So, if the cell requested contained a card, return a NEW Cell object with
+the same Card and owner. The same applies for an empty cell and a cell of pawns.
+2. Changed board instance in BoardStrategy class so that it uses the ReadOnlyModel, not the mutable
+one.
+3. Changed the view class so that it resizes the window based on the size of the board, NOT the size
+of the hand.
+4. Changed handling of moves in Controller so that it does not just print out when a move is made,
+but handles the move based on the player.
+
+## Classes introduced in Part 3:
+1. PlayerActionsInterface: This interface defines what actions a player can make. A player is
+defined to be either a ComputerPlayer or HumanPlayer. The HumanPlayer class is stub because all
+moves made by the human are handled by the human and directly published to the view, while the moves
+made by the ComputerPlayer must be handled through the controller because the computer in unable to
+confirm card placing and passing based on keyboard inputs.
+2. ModelStatus: This interface sends notifications to the view that the model has been updated due
+to a Move being made. It has an update() method that is utilized to repaint the board.
+3. ControllerTest: This test class isolates the controller to test whether it is handling both human
+and computer input properly. This is done by creating mock objects of the game to simulate specific
+conditions, and two log classes for the Model and View to confirm moves were made.
+** No other new classes were made. The majority of the changes were done to create connections
+between the Model, View, and Controller by actually handling input.
+
+## How to Run PawnsBoardGame
+1. Set up Run configurations depending on the player:
+   docs/RedDeck.config docs/BlueDeck.config human fillfirststrategy
+   docs/RedDeck.config docs/BlueDeck.config human maxRowStrategy
+** Human could be player 1 or 2
+
+
+Notes:
+When consecutive pass or win: game over displays with player with higher score/ winner
+
+
+

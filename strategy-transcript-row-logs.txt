@@ -1,0 +1,18 @@
+Move: Row 0, Col 4
+Score: 0
+
+Move: Row 0, Col 4
+Score: 0
+
+Move: Row 0, Col 4
+Score: 0
+
+Move: Row 0, Col 4
+Score: 0
+
+Move: Row 0, Col 4
+Score: 0
+
+Move: Row 0, Col 4
+Score: 0
+

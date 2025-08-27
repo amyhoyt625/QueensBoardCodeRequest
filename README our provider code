@@ -1,0 +1,20 @@
+# README #
+
+Files changed and why
+
+In our own files we updated our view to have a helper showGameOver() which
+is called by the controller to notify/tell the view to display our game
+over, which used to solely be handled in the controller. We also had a
+problem with our observers/set controller methods. We used to have them be
+two separate things but then merged them together to properly be called
+throughout our program, we ket the overall design and naming convention the
+same. One of our customers pointed out these issues which helped them and
+also improved our code.
+
+//had to add getters for adaptation
+
+
+Our providers had to change their code to include necessary interfaces for
+classes, their lists also take in their class CardGame instead of their
+interface Card, which messes with both of our programs.
+

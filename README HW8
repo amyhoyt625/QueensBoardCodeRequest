@@ -1,0 +1,45 @@
+# README #
+
+Features successfully adapted
+CardtoCardGame
+this is an adapter that is a helper fo rother adapters, it adapts from our Card
+interface to our provider's Card interface to then be used throughout our other
+adapter classes.
+
+PlayerAdpater
+is an interface we thought we needed to adapt but ended up not needing to use it.
+
+
+Model?
+Still working on
+
+View?
+Still working on
+
+
+
+  @Override
+  public int getSelectedRow() {
+    //the provider code doesn't properly analyze the view to get these values
+    // their view doesn't display proper placement thus affecting this method
+    //making us leave as a stub
+    return super.getSelectedRow();
+  }
+
+  @Override
+  public int getSelectedCol() {
+    return super.getSelectedCol();
+    //the provider code doesn't properly analyze the view to get these values
+    //their view doesn't display proper placement thus affecting this method
+    //making us leave as a stub
+  }
+
+
+
+
+
+
+
+Features that weren't successfully adapted and why
+Missing code and implementation, List take in classes, main doesn't work the correct
+way.
